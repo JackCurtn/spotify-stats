@@ -1,0 +1,42 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+*.so
+
+# Virtual environment
+venv/
+env/
+.venv/
+ENV/
+
+# Environment variables and secrets
+.env
+
+# Flask/Migrations
+instance/
+*.db
+*.sqlite3
+migrations/versions/
+
+# Editor/IDE config
+.vscode/
+.idea/
+
+# Docker
+*.log
+docker-compose.override.yml
+*.pid
+
+# MacOS/Linux
+.DS_Store
+Thumbs.db
+
+# Python metadata
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Test folder
+test/
