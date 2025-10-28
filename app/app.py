@@ -1,28 +1,36 @@
+from flask import Flask, render_template, request
 import spotify_api
 
 
-def main():
-	artist = input("Enter artist name: ").strip()
-	token = spotify_api.get_token()
-	result = spotify_api.search_for_artist(token, artist)
+app = Flask(__name__)
 
-	if not result:
-		return
 
-	artist_id = result["id"]
+@app.route("/", methods=("GET", "POST"))
+def index():
+    artist = ""
+    tracks = []
+    albums = []
+    error = None
 
-	songs = spotify_api.get_songs_by_artist(token, artist_id)
-	albums = spotify_api.get_albums_by_artist(token, artist_id)
+    if request.method == "POST":
+        artist = (request.form.get("artist") or "").strip()
+        if not artist:
+            error = "Please enter an artist name."
+        else:
+            token = spotify_api.get_token()
+            if not token:
+                error = "Include valid CLIENT_ID and CLIENT_SECRET environment variables."
+            else:
+                info = spotify_api.search_for_artist(token, artist)
+                if not info:
+                    error = "Artist not found."
+                else:
+                    artist_id = info["id"]
+                    tracks = spotify_api.get_songs_by_artist(token, artist_id)
+                    albums = spotify_api.get_albums_by_artist(token, artist_id)
 
-	print("Top Songs:")
-	for idx, song in enumerate(songs):
-		print(f"{idx + 1}. {song['name']}")
-
-	print("\nAlbums:")
-	for idx, album in enumerate(albums):
-		print(f"{album['release_date'][:4]} - {album['name']}")
+    return render_template("index.html", artist=artist, tracks=tracks, albums=albums, error=error)
 
 
 if __name__ == "__main__":
-	main()
-	
+    app.run(debug=False, host="0.0.0.0", port=5000)

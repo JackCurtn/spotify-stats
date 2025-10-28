@@ -24,10 +24,8 @@ def get_token():
 
     data = {"grant_type": "client_credentials"}
     result = post(url, headers=headers, data=data)
-    try:
-        return result.json().get("access_token")
-    except Exception:
-        return json.loads(result.content).get("access_token")
+    
+    return result.json().get("access_token")
 
 
 def get_auth_header(token):
@@ -41,10 +39,7 @@ def search_for_artist(token, artist_name):
 
     query_url = url + query
     result = get(query_url, headers=headers)
-    try:
-        json_result = result.json()["artists"]["items"]
-    except Exception:
-        json_result = json.loads(result.content)["artists"]["items"]
+    json_result = result.json()["artists"]["items"]
 
     if len(json_result) == 0:
         print("Not found")
@@ -57,10 +52,8 @@ def get_songs_by_artist(token, artist_id):
     url = f"https://api.spotify.com/v1/artists/{artist_id}/top-tracks?country=US"
     headers = get_auth_header(token)
     result = get(url, headers=headers)
-    try:
-        return result.json()["tracks"]
-    except Exception:
-        return json.loads(result.content)["tracks"]
+
+    return result.json()["tracks"]
 
 
 def get_albums_by_artist(token, artist_id, include_groups="album", market="US", limit=50):
@@ -68,7 +61,5 @@ def get_albums_by_artist(token, artist_id, include_groups="album", market="US", 
     headers = get_auth_header(token)
     params = {"include_groups": include_groups, "market": market, "limit": limit}
     result = get(url, headers=headers, params=params)
-    try:
-        return result.json().get("items", [])
-    except Exception:
-        return json.loads(result.content).get("items", [])
+
+    return result.json().get("items", [])
