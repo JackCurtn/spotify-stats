@@ -38,9 +38,9 @@
           {% if tracks %}
           <section class="tracks" aria-labelledby="top-tracks-heading">
             <h2 id="top-tracks-heading">Top Tracks</h2>
-            <ul class="track-grid">
+            <ul class="grid">
               {% for t in tracks %}
-              <li class="track-card">
+              <li class="card-item">
                 {% set track_url = (t.external_urls.spotify if t.external_urls
                 is defined and t.external_urls.spotify is defined else
                 (t['external_urls']['spotify'] if (t.external_urls is defined
@@ -53,35 +53,31 @@
                   rel="noopener noreferrer"
                 >
                   <img
-                    class="track-art"
+                    class="art"
                     src="{{ t.album.images[0].url }}"
                     alt="{{ t.name|e }} cover"
                     loading="lazy"
-                    width="80"
-                    height="80"
                   />
                 </a>
                 {% else %}
                 <img
-                  class="track-art"
+                  class="art"
                   src="{{ t.album.images[0].url }}"
                   alt="{{ t.name|e }} cover"
                   loading="lazy"
-                  width="80"
-                  height="80"
                 />
                 {% endif %} {% endif %}
-                <div class="track-meta">
+                <div class="meta">
                   {% if track_url %}
                   <a
-                    class="card-link track-name"
+                    class="card-link title"
                     href="{{ track_url }}"
                     target="_blank"
                     rel="noopener noreferrer"
                     >{{ loop.index }}. {{ t.name }}</a
                   >
                   {% else %}
-                  <div class="track-name">{{ loop.index }}. {{ t.name }}</div>
+                  <div class="title">{{ loop.index }}. {{ t.name }}</div>
                   {% endif %} {% if t.artists %}
                   <div class="muted">
                     {{ t.artists | map(attribute='name') | join(', ') }}
@@ -95,9 +91,9 @@
           {% endif %} {% if albums %}
           <section class="albums" aria-labelledby="albums-heading">
             <h2 id="albums-heading">Albums</h2>
-            <ul class="album-grid">
+            <ul class="grid">
               {% for a in albums %}
-              <li class="album-card">
+              <li class="card-item">
                 {% set album_url = (a.external_urls.spotify if a.external_urls
                 is defined and a.external_urls.spotify is defined else
                 (a['external_urls']['spotify'] if (a.external_urls is defined
@@ -110,26 +106,22 @@
                   rel="noopener noreferrer"
                 >
                   <img
-                    class="album-art"
+                    class="art"
                     src="{{ a.images[0].url }}"
                     alt="{{ a.name|e }} cover"
-                    width="160"
-                    height="160"
                     loading="lazy"
                   />
                 </a>
                 {% else %}
                 <img
-                  class="album-art"
+                  class="art"
                   src="{{ a.images[0].url }}"
                   alt="{{ a.name|e }} cover"
-                  width="160"
-                  height="160"
                   loading="lazy"
                 />
                 {% endif %} {% endif %}
-                <div class="album-meta">
-                  <div class="album-name">{{ a.name }}</div>
+                <div class="meta">
+                  <div class="title">{{ a.name }}</div>
                   {% if a.release_date %}
                   <div class="muted">{{ a.release_date }}</div>
                   {% endif %}
