@@ -2,69 +2,145 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Spotify Top Tracks & Albums</title>
-    <style>
-      body {
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-        margin: 2rem;
-      }
-      form {
-        margin-bottom: 1rem;
-      }
-      input[type="text"] {
-        padding: 0.5rem;
-        width: 300px;
-      }
-      button {
-        padding: 0.5rem 0.75rem;
-      }
-      .error {
-        color: #b00;
-      }
-      .section {
-        margin-top: 1.25rem;
-      }
-      li {
-        margin-bottom: 0.5rem;
-      }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Spotify — Top Tracks & Albums</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
   </head>
   <body>
-    <h1>Spotify — Top Tracks & Albums</h1>
+    <main class="center">
+      <div class="card compact" role="main">
+        <form
+          method="post"
+          class="search-form"
+          aria-label="Search for an artist"
+        >
+          <label for="artist-input" class="sr-only">Artist name</label>
+          <input
+            id="artist-input"
+            type="text"
+            name="artist"
+            placeholder="Search artist"
+            value="{{ artist }}"
+            required
+            autocomplete="off"
+          />
+          <button class="btn" type="submit" aria-label="Search">Search</button>
+        </form>
 
-    <form method="post">
-      <input
-        type="text"
-        name="artist"
-        placeholder="Artist name"
-        value="{{ artist|e }}"
-      />
-      <button type="submit">Search</button>
-    </form>
+        {% if error %}
+        <div class="error" role="alert">{{ error }}</div>
+        {% endif %}
 
-    {% if error %}
-    <div class="error">{{ error }}</div>
-    {% endif %} {% if tracks %}
-    <div class="section">
-      <h2>Top Tracks</h2>
-      <ol>
-        {% for t in tracks %}
-        <li>{{ t.name }}</li>
-        {% endfor %}
-      </ol>
-    </div>
-    {% endif %} {% if albums %}
-    <div class="section">
-      <h2>Albums</h2>
-      <ol>
-        {% for a in albums %}
-        <li>
-          {{ a.name }}{% if a.release_date %} ({{ a.release_date }}){% endif %}
-        </li>
-        {% endfor %}
-      </ol>
-    </div>
-    {% endif %}
+        <div class="results" aria-live="polite">
+          {% if tracks %}
+          <section class="tracks" aria-labelledby="top-tracks-heading">
+            <h2 id="top-tracks-heading">Top Tracks</h2>
+            <ul class="track-grid">
+              {% for t in tracks %}
+              <li class="track-card">
+                {% set track_url = (t.external_urls.spotify if t.external_urls
+                is defined and t.external_urls.spotify is defined else
+                (t['external_urls']['spotify'] if (t.external_urls is defined
+                and t.external_urls) else None)) %} {% if t.album and
+                t.album.images and t.album.images[0] %} {% if track_url %}
+                <a
+                  class="card-link"
+                  href="{{ track_url }}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    class="track-art"
+                    src="{{ t.album.images[0].url }}"
+                    alt="{{ t.name|e }} cover"
+                    loading="lazy"
+                    width="80"
+                    height="80"
+                  />
+                </a>
+                {% else %}
+                <img
+                  class="track-art"
+                  src="{{ t.album.images[0].url }}"
+                  alt="{{ t.name|e }} cover"
+                  loading="lazy"
+                  width="80"
+                  height="80"
+                />
+                {% endif %} {% endif %}
+                <div class="track-meta">
+                  {% if track_url %}
+                  <a
+                    class="card-link track-name"
+                    href="{{ track_url }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >{{ loop.index }}. {{ t.name }}</a
+                  >
+                  {% else %}
+                  <div class="track-name">{{ loop.index }}. {{ t.name }}</div>
+                  {% endif %} {% if t.artists %}
+                  <div class="muted">
+                    {{ t.artists | map(attribute='name') | join(', ') }}
+                  </div>
+                  {% endif %}
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+          </section>
+          {% endif %} {% if albums %}
+          <section class="albums" aria-labelledby="albums-heading">
+            <h2 id="albums-heading">Albums</h2>
+            <ul class="album-grid">
+              {% for a in albums %}
+              <li class="album-card">
+                {% set album_url = (a.external_urls.spotify if a.external_urls
+                is defined and a.external_urls.spotify is defined else
+                (a['external_urls']['spotify'] if (a.external_urls is defined
+                and a.external_urls) else None)) %} {% if a.images and
+                a.images[0] %} {% if album_url %}
+                <a
+                  class="card-link"
+                  href="{{ album_url }}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    class="album-art"
+                    src="{{ a.images[0].url }}"
+                    alt="{{ a.name|e }} cover"
+                    width="160"
+                    height="160"
+                    loading="lazy"
+                  />
+                </a>
+                {% else %}
+                <img
+                  class="album-art"
+                  src="{{ a.images[0].url }}"
+                  alt="{{ a.name|e }} cover"
+                  width="160"
+                  height="160"
+                  loading="lazy"
+                />
+                {% endif %} {% endif %}
+                <div class="album-meta">
+                  <div class="album-name">{{ a.name }}</div>
+                  {% if a.release_date %}
+                  <div class="muted">{{ a.release_date }}</div>
+                  {% endif %}
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+          </section>
+          {% endif %}
+        </div>
+      </div>
+    </main>
   </body>
 </html>

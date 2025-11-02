@@ -16,7 +16,7 @@ def index():
     if request.method == "POST":
         artist = (request.form.get("artist") or "").strip()
         if not artist:
-            error = "Please enter an artist name."
+            error = "Enter artist name."
         else:
             token = spotify_api.get_token()
             if not token:
