@@ -30,9 +30,19 @@ def index():
                     tracks = spotify_api.get_songs_by_artist(token, artist_id)
                     albums = spotify_api.get_albums_by_artist(token, artist_id)
 
-    return render_template("index.html", artist=artist, tracks=tracks, albums=albums, error=error)
+        return render_template(
+            "index.html",
+            artist=artist,
+            tracks=tracks,
+            albums=albums,
+            error=error,
+        )
 
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8050))
-    app.run(debug=False, host="0.0.0.0", port=port)
+    app.run(
+        debug=False,
+        host="0.0.0.0",
+        port=port,
+    )

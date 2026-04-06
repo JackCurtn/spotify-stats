@@ -1,6 +1,5 @@
 from dotenv import load_dotenv
 import base64
-import json
 import os
 from requests import get, post
 
@@ -33,7 +32,6 @@ def get_token():
 
     data = {"grant_type": "client_credentials"}
     result = post(url, headers=headers, data=data)
-    
     return result.json().get("access_token")
 
 
@@ -62,15 +60,12 @@ def search_for_artist(token, artist_name):
     url = "https://api.spotify.com/v1/search"
     headers = get_auth_header(token)
     query = f"?q={artist_name}&type=artist&limit=1"
-
     query_url = url + query
     result = get(query_url, headers=headers)
     json_result = result.json()["artists"]["items"]
-
     if len(json_result) == 0:
         print("Not found")
         return None
-
     return json_result[0]
 
 
@@ -106,7 +101,10 @@ def get_albums_by_artist(token, artist_id, include_groups="album", market="US", 
     """
     url = f"https://api.spotify.com/v1/artists/{artist_id}/albums"
     headers = get_auth_header(token)
-    params = {"include_groups": include_groups, "market": market, "limit": limit}
+    params = {
+        "include_groups": include_groups,
+        "market": market,
+        "limit": limit,
+    }
     result = get(url, headers=headers, params=params)
-
     return result.json().get("items", [])
