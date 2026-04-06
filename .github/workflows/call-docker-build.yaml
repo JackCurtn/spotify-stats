@@ -3,6 +3,9 @@
 name: Docker Build and Push
 
 on:
+  workflow_run:
+    workflows: ["Lint Python"]
+    types: [completed]
   push:
     branches:
       - main
@@ -15,6 +18,8 @@ on:
 jobs:
   build-and-push:
     name: Build and Push Docker Images
+
+    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:

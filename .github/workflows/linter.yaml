@@ -1,0 +1,50 @@
+name: Lint Python
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+
+jobs:
+    lint:
+        name: Lint (Black, Ruff, pydocstyle)
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                  python-version: "3.11"
+
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install -r requirements.txt
+
+            - name: Run Black (check)
+              run: |
+                  black --version
+                  black --check .
+
+            - name: Run Ruff
+              run: |
+                  ruff --version
+                  ruff check .
+
+            - name: Enforce Google-style docstrings with pydocstyle
+              run: |
+                  pydocstyle --version || true
+                  # Use Google convention for docstrings (D401, D402, etc come from pydocstyle)
+                  pydocstyle --convention=google .
+
+            - name: Upload linter annotations (optional)
+              if: ${{ failure() }}
+              uses: actions/upload-artifact@v4
+              with:
+                  name: linter-failures
+                  path: .
