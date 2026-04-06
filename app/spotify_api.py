@@ -95,8 +95,9 @@ def get_albums_by_artist(token, artist_id, include_groups="album", market="US", 
     Args:
         token: Spotify access token.
         artist_id: Spotify ID for the artist.
-        include_groups: Comma-separated list of keywords (e.g., 'album', 'single').
-        market: Xountry code.
+        include_groups: Comma-separated list of keywords (e.g.,
+            'album', 'single').
+        market: Country code.
         limit: Maximum number of items to return.
 
     Returns:
