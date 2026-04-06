@@ -20,7 +20,9 @@ def index():
         else:
             token = spotify_api.get_token()
             if not token:
-                error = "Include valid CLIENT_ID and CLIENT_SECRET environment variables."
+                error = (
+                    "Include valid CLIENT_ID and CLIENT_SECRET environment variables."
+                )
             else:
                 info = spotify_api.search_for_artist(token, artist)
                 if not info:
