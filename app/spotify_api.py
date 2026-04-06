@@ -84,7 +84,9 @@ def get_songs_by_artist(token, artist_id):
     )
     headers = get_auth_header(token)
     result = get(url, headers=headers)
-    return result.json()["tracks"]
+    return result.json()[
+        "tracks"
+    ]
 
 
 def get_albums_by_artist(token, artist_id, include_groups="album", market="US", limit=50):
@@ -100,7 +102,9 @@ def get_albums_by_artist(token, artist_id, include_groups="album", market="US", 
     Returns:
         A list of dictionaries representing the artist's albums.
     """
-    url = f"https://api.spotify.com/v1/artists/{artist_id}/albums"
+    url = (
+        f"https://api.spotify.com/v1/artists/{artist_id}/albums"
+    )
     headers = get_auth_header(token)
     params = {
         "include_groups": include_groups,
