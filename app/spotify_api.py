@@ -89,7 +89,13 @@ def get_songs_by_artist(token, artist_id):
     ]
 
 
-def get_albums_by_artist(token, artist_id, include_groups="album", market="US", limit=50):
+def get_albums_by_artist(
+    token,
+    artist_id,
+    include_groups="album",
+    market="US",
+    limit=50,
+):
     """Retrieves a list of albums for a specific artist.
 
     Args:
